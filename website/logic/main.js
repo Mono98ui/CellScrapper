@@ -87,9 +87,8 @@ window.onload = (event) => {
 function searchItems(event){
     const keyName = event.key;
     var inputContent = document.getElementsByClassName("form-control")[0];
-    console.log(inputContent.innerText)
-    if(keyName ==  13 && inputContent.innerText != ""){
-        console.log(inputContent.innerText);
+    if(keyName ==  "Enter" && inputContent.value !==""){
+        console.log(inputContent.value);
     }
 
 }
