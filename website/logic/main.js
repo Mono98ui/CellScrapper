@@ -79,3 +79,15 @@ window.onload = (event) => {
     //console.log(data);
     //document.getElementById("search-result").innerHTML = "Hello JavaScript";
 };
+
+function searchItems(event){
+    const keyName = event.key;
+    var inputContent = document.getElementsByClassName("form-control")[0];
+    console.log(inputContent.innerText)
+    if(keyName ==  13 && inputContent.innerText != ""){
+        console.log(inputContent.innerText);
+    }
+
+}
+
+document.addEventListener('keydown',searchItems);
