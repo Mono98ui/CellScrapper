@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-header = {"User-Agent":'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0'}
+header = {"User-Agent": 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0'}
 
 def requestWeb(url):
     page = requests.get(url, headers=header)
@@ -19,7 +19,7 @@ def search(name,website):
     soupe = requestWeb(url)
     return soupe
 
-def scraper (name,website):
+def scraper(name,website):
     soupe = search(name,website)
     products = []
     if(website == "Ebay"):
@@ -53,10 +53,16 @@ def scraper (name,website):
                 'link':  "https://www.kijiji.ca"+item.find('a',  {'class':"title"})['href'],
             }
             products.append(product3)
+    return products
 
+def run(name):
+    products = []
+    products+=scraper(name,"Kijiji")
+    products += scraper(name, "Ebay")
+    products += scraper(name, "Stockx")
     productspd = pd.DataFrame(products)
-    productspd.to_csv(name +' '+website+' '+'output.csv', index=False)
+    productspd.to_csv(name +' '+'output.csv', index=False)
     print('CSV generated !')
     return
 
-productslist = scraper("iphone 13","Ebay")
+productslist = run("iphone 13")
