@@ -1,8 +1,27 @@
+import csv
+import json
+
+import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
+from flask import Flask, jsonify, request
+from flask_restful import Api
+
+app = Flask(__name__)
+api = Api(app)
 
 header = {"User-Agent": 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0'}
+
+class Item(object):
+    title = ""
+    price = 0
+    link = ""
+
+    # The class "constructor" - It's actually an initializer
+    def __init__(self, name, age, major):
+        self.name = name
+        self.age = age
+        self.major = major
 
 def requestWeb(url):
     page = requests.get(url, headers=header)
@@ -31,7 +50,7 @@ def scraper(name,website):
                     'title': item.find('h3',{'class':'s-item__title'}).text,
                     'price': item.find('span',{'class' : 's-item__price'}).text.replace('$','').replace('C',''),
                     'link': item.find('a',{'class': 's-item__link'})['href'],
-                    'image': item.find('img',{'class':'s-item__image-img'})['src'],
+                    # 'image': item.find('img',{'class':'s-item__image-img'})['src'],
                 }
                 products.append(product1)
 
@@ -42,7 +61,7 @@ def scraper(name,website):
                 'title': item.find('p', {'class': 'chakra-text css-3lpefb'}).text,
                 'price': item.find('p', {'class': 'chakra-text css-9ryi0c'}).text.replace('$','').replace('CA',''),
                 'link': "https://stockx.com"+item.find('a')['href'],
-                'image': item.find('div',{'class':'css-4tsjxp'}).text,
+                # 'image': item.find('div',{'class':'css-4tsjxp'}).text,
             }
             products.append(product2)
     elif(website == 'Kijiji'):
@@ -63,12 +82,52 @@ def scraper(name,website):
 
 def run(name):
     products = []
-    products+=scraper(name,"Kijiji")
+    products += scraper(name,"Kijiji")
     products += scraper(name, "Ebay")
     products += scraper(name, "Stockx")
+
     productspd = pd.DataFrame(products)
-    productspd.to_csv(name +' '+'output.csv', index=False)
-    print('CSV generated !')
+    productspd.to_csv('output.csv', index=False)
+
+    jsonArray = []
+    with open('output.csv', encoding='utf-8') as csvf:
+        #load csv file data using csv library's dictionary reader
+        csvReader = csv.DictReader(csvf)
+
+        #convert each csv row into python dict
+        for row in csvReader:
+            #add this python dict to json array
+            jsonArray.append(row)
+
+    with open('output.json', 'w', encoding='utf-8') as jsonf:
+        jsonString = json.dumps(jsonArray, indent=4)
+        jsonf.write(jsonString)
+
+    print('CSV and JSON generated !')
+
+    out_file = open('output.json','r+')
+    out_file.write('{"item":[{')
+    out_file.close();
+    out_file = open('output.json', 'a+')
+    out_file.write('}')
+    out_file.close()
     return
 
-productslist = run("RTX 3060")
+#productslist = run(sys.argv[0])
+
+@app.route("/getData", methods=["POST", "GET"])
+def login():
+    if request.method == "POST":
+        jsonData = request.data.decode('utf8').replace("'", '"')
+        data = json.loads(jsonData)
+        run(data["data"])
+        with open('./output.json', 'r') as f:
+            data = json.load(f)
+
+        return data
+    else:
+        return "LOL not this one", 400
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
