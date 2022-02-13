@@ -109,7 +109,12 @@ function formatData(request){
 function searchItems(event){
     const keyName = event.key;
     var inputContent = document.getElementsByClassName("form-control")[0];
+    var titleSearch = document.getElementsByClassName("bestSellers")[0];
+
     if(keyName ==  "Enter" && inputContent.value !==""){
+
+        titleSearch.innerText ="Search Result";
+
         console.log(inputContent.value);
 
         var request = new XMLHttpRequest();
