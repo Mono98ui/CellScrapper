@@ -56,23 +56,21 @@ function GenerateResult(csvData) {
 
 
 window.onload = (event) => {
-    window.onload = (event) => {
-        var request = new XMLHttpRequest();  
-        const open_file = request.open("GET", "../../crawler copy/output.json", false);   
-        request.send(null);
-    
-        var jsonData = new Array();
-    
-        fetch("../../crawler copy/output.json").then(response => {
-                return response.json();
-            }).then(jsondata =>{
-                for(var i = 0;i<jsondata.item.length;i++){
-                    var Temp = new Array(jsondata.item[i].title,jsondata.item[i].price,jsondata.item[i].link);
-                    jsonData.push(Temp);
-                }
-                GenerateResult(jsonData);
-            });
-    }
+    var request = new XMLHttpRequest();
+    const open_file = request.open("GET", "../../crawler copy/output.json", false);
+    request.send(null);
+
+    var jsonData = new Array();
+
+    fetch("../../crawler copy/output.json").then(response => {
+        return response.json();
+    }).then(jsondata => {
+        for (var i = 0; i < jsondata.item.length; i++) {
+            var Temp = new Array(jsondata.item[i].title, jsondata.item[i].price, jsondata.item[i].link);
+            jsonData.push(Temp);
+        }
+        GenerateResult(jsonData);
+    });
 };
 
 function formatData(request){
