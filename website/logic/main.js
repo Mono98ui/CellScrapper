@@ -58,6 +58,8 @@ function GenerateResult(csvData) {
 window.onload = (event) => {
     //GenerateResult();
     //const cars = csv().fromFile("../../crawler/output.csv");
+
+    /*
     var request = new XMLHttpRequest();
     request.open("GET", "../../crawler/output.csv", false);
     request.send(null);
@@ -76,21 +78,49 @@ window.onload = (event) => {
             csvData[i][j] = csvData[i][j].replace("\"", '').replace("\\", '');
         }
     }
-
     GenerateResult(csvData);
+    */
+
     // Retrived data from csv file content
     //console.log(csvData);  
     //console.log(data);
     //document.getElementById("search-result").innerHTML = "Hello JavaScript";
 };
 
+function formatData(request){
+    var csvData = new Array();
+    var jsonObject = request.responseText.split("\n");
+
+    for (var i = 1; i < jsonObject.length - 1; i++) {
+        csvData.push(jsonObject[i].split(','));
+    }
+
+    console.log(csvData)
+
+    for (var i = 0; i < csvData.length; i++) {
+        for (var j = 0; j < csvData[i].length; j++) {
+            csvData[i][j] = csvData[i][j].replace("\"", '').replace("\\", '');
+        }
+    }
+
+    return csvData;
+}
+
 function searchItems(event){
     const keyName = event.key;
     var inputContent = document.getElementsByClassName("form-control")[0];
     if(keyName ==  "Enter" && inputContent.value !==""){
         console.log(inputContent.value);
-    }
 
+        var request = new XMLHttpRequest();
+        request.onload = function() {
+            csvData = formatData(request);
+            GenerateResult(csvData);
+        }
+        request.open("GET", "../../crawler/output.csv", false);
+        request.send(null);
+
+    }
 }
 
 document.addEventListener('keydown',searchItems);
