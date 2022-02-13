@@ -84,3 +84,14 @@ h1 {
     height:35px;   /* Height of the footer */
     background: #5b5cad;
  }
+
+ a {
+  color: #4647aa;
+  font-size: 18px;
+  text-align: center;
+}
+
+h5 {
+  font-size: 15px;
+  text-align: center;
+}
