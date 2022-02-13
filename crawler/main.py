@@ -1,9 +1,14 @@
-import requests
-from bs4 import BeautifulSoup
-import pandas as pd
 import csv
 import json
-import sys
+
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+from flask import Flask, jsonify, request
+from flask_restful import Api
+
+app = Flask(__name__)
+api = Api(app)
 
 header = {"User-Agent": 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0'}
 
@@ -108,4 +113,21 @@ def run(name):
     out_file.close()
     return
 
-productslist = run(sys.argv[0])
+#productslist = run(sys.argv[0])
+
+@app.route("/getData", methods=["POST", "GET"])
+def login():
+    if request.method == "POST":
+        jsonData = request.data.decode('utf8').replace("'", '"')
+        data = json.loads(jsonData)
+        run(data["data"])
+        with open('./output.json', 'r') as f:
+            data = json.load(f)
+
+        return data
+    else:
+        return "LOL not this one", 400
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
