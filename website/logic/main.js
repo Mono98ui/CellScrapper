@@ -56,35 +56,23 @@ function GenerateResult(csvData) {
 
 
 window.onload = (event) => {
-    //GenerateResult();
-    //const cars = csv().fromFile("../../crawler/output.csv");
-
-    /*
-    var request = new XMLHttpRequest();
-    request.open("GET", "../../crawler/output.csv", false);
-    request.send(null);
-
-    var csvData = new Array();
-    var jsonObject = request.responseText.split("\n");
-
-    for (var i = 1; i < jsonObject.length - 1; i++) {
-        csvData.push(jsonObject[i].split(','));
+    window.onload = (event) => {
+        var request = new XMLHttpRequest();  
+        const open_file = request.open("GET", "../../crawler copy/output.json", false);   
+        request.send(null);
+    
+        var jsonData = new Array();
+    
+        fetch("../../crawler copy/output.json").then(response => {
+                return response.json();
+            }).then(jsondata =>{
+                for(var i = 0;i<jsondata.item.length;i++){
+                    var Temp = new Array(jsondata.item[i].title,jsondata.item[i].price,jsondata.item[i].link);
+                    jsonData.push(Temp);
+                }
+                GenerateResult(jsonData);
+            });
     }
-
-    console.log(csvData)
-
-    for (var i = 0; i < csvData.length; i++) {
-        for (var j = 0; j < csvData[i].length; j++) {
-            csvData[i][j] = csvData[i][j].replace("\"", '').replace("\\", '');
-        }
-    }
-    GenerateResult(csvData);
-    */
-
-    // Retrived data from csv file content
-    //console.log(csvData);  
-    //console.log(data);
-    //document.getElementById("search-result").innerHTML = "Hello JavaScript";
 };
 
 function formatData(request){
