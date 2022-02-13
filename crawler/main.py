@@ -20,10 +20,10 @@ def search(name,website):
     return soupe
 
 def scraper (name,website):
-    soup = search(name,website)
+    soupe = search(name,website)
     products = []
     if(website == "Ebay"):
-        results1 = soup.find_all('div',{'class':'s-item__info clearfix'})
+        results1 = soupe.find_all('div',{'class':'s-item__info clearfix'})
         for item in results1:
             if(item.find('h3',{'class':'s-item__title'}).text != "Shop on eBay"):
 
@@ -35,7 +35,7 @@ def scraper (name,website):
                 products.append(product1)
 
     elif(website == "Stockx"):
-        results2 = soup.find_all("div",{"class":"css-1ibvugw-GridProductTileContainer"})
+        results2 = soupe.find_all("div",{"class":"css-1ibvugw-GridProductTileContainer"})
         for item in results2:
             product2 = {
                 'title': item.find('p', {'class': 'chakra-text css-3lpefb'}).text,
@@ -45,7 +45,7 @@ def scraper (name,website):
             }
             products.append(product2)
     elif(website == 'Kijiji'):
-        results3 = soup.find_all("div",{"class":"info"})
+        results3 = soupe.find_all("div",{"class":"info"})
         for item in results3:
             product3 = {
                 'title': item.find('div', {'class':"title"}).text.replace("\n","").replace(" ",""),
@@ -53,8 +53,10 @@ def scraper (name,website):
                 'link':  "https://www.kijiji.ca"+item.find('a',  {'class':"title"})['href'],
             }
             products.append(product3)
+
     productspd = pd.DataFrame(products)
     productspd.to_csv(name +' '+website+' '+'output.csv', index=False)
     print('CSV generated !')
+    return
 
 productslist = scraper("iphone 13","Ebay")
