@@ -64,9 +64,13 @@ window.onload = (event) => {
 
     var csvData = new Array();
     var jsonObject = request.responseText.split("\n");
+
     for (var i = 1; i < jsonObject.length - 1; i++) {
         csvData.push(jsonObject[i].split(','));
     }
+
+    console.log(csvData)
+
     for (var i = 0; i < csvData.length; i++) {
         for (var j = 0; j < csvData[i].length; j++) {
             csvData[i][j] = csvData[i][j].replace("\"", '').replace("\\", '');
