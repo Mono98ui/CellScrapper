@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import csv
 import json
-import pprint
+import sys
 
 header = {"User-Agent": 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0'}
 
@@ -80,15 +80,6 @@ def run(name):
     products += scraper(name,"Kijiji")
     products += scraper(name, "Ebay")
     products += scraper(name, "Stockx")
-    # out_file = open(name + ' data.json', 'r+')
-    # json.dump(products, out_file)
-    # out_file.write("gg")
-    # content = out_file.read()
-    # out_file.seek(0)
-    # out_file.write(content)
-
-
-
 
     productspd = pd.DataFrame(products)
     productspd.to_csv('output.csv', index=False)
@@ -109,14 +100,12 @@ def run(name):
 
     print('CSV and JSON generated !')
 
-    out_file = open('output.json','r+');
+    out_file = open('output.json','r+')
     out_file.write('{"item":[{')
     out_file.close();
-    out_file = open('output.json', 'a+');
+    out_file = open('output.json', 'a+')
     out_file.write('}')
-    out_file.close();
-    # df = pd.read_csv (r'output.csv')
-    # df.to_json(r'output.json')
+    out_file.close()
     return
 
-productslist = run("RTX 3060")
+productslist = run(sys.argv[0])
