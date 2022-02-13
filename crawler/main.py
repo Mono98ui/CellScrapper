@@ -23,14 +23,15 @@ def scraper(name,website):
     soupe = search(name,website)
     products = []
     if(website == "Ebay"):
-        results1 = soupe.find_all('div',{'class':'s-item__info clearfix'})
+        results1 = soupe.find_all('div',{'class':'s-item__wrapper clearfix'})
         for item in results1:
             if(item.find('h3',{'class':'s-item__title'}).text != "Shop on eBay"):
 
                 product1 = {
                     'title': item.find('h3',{'class':'s-item__title'}).text,
-                    'price': item.find('span',{'class' : 's-item__price'}).text,
+                    'price': item.find('span',{'class' : 's-item__price'}).text.replace('$','').replace('C',''),
                     'link': item.find('a',{'class': 's-item__link'})['href'],
+                    'image': item.find('img',{'class':'s-item__image-img'})['src'],
                 }
                 products.append(product1)
 
@@ -39,20 +40,25 @@ def scraper(name,website):
         for item in results2:
             product2 = {
                 'title': item.find('p', {'class': 'chakra-text css-3lpefb'}).text,
-                'price': item.find('p', {'class': 'chakra-text css-9ryi0c'}).text,
-                # 'bids':
+                'price': item.find('p', {'class': 'chakra-text css-9ryi0c'}).text.replace('$','').replace('CA',''),
                 'link': "https://stockx.com"+item.find('a')['href'],
+                'image': item.find('div',{'class':'css-4tsjxp'}).text,
             }
             products.append(product2)
     elif(website == 'Kijiji'):
         results3 = soupe.find_all("div",{"class":"info"})
         for item in results3:
             product3 = {
-                'title': item.find('div', {'class':"title"}).text.replace("\n","").replace(" ",""),
-                'price': item.find('div', {'class':"price"}).text.replace("\n","").replace("\xa0","").replace(" ",""),
+                'title': item.find('div', {'class':"title"}).text.replace("\n","").replace('                            ',''),
+                'price': item.find('div', {'class':"price"}).text.replace("\n","").replace("\xa0","").replace(" ","").replace('$','').replace('C',''),
                 'link':  "https://www.kijiji.ca"+item.find('a',  {'class':"title"})['href'],
+                 # 'img': item.find('img')['src'],
             }
             products.append(product3)
+        results4 = soupe.find_all("div", {"class": "left-col"})
+        # i=0
+        # for item in results4:
+        #     product3['img'].append(item.find('picture').text)
     return products
 
 def run(name):
@@ -65,4 +71,4 @@ def run(name):
     print('CSV generated !')
     return
 
-productslist = run("iphone 13")
+productslist = run("RTX 3060")
